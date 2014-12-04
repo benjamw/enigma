@@ -1,0 +1,12 @@
+{
+	"require-dev": {
+		"phpunit/phpunit": "4.2.*",
+		"phpunit/dbunit": ">=1.2"
+	},
+	"autoload": {
+		"psr-4": { "Enigma\\": "lib/" }
+	},
+	"autoload-dev": {
+		"psr-4": { "Tests\\": "tests/" }
+	}
+}
