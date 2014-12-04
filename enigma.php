@@ -517,7 +517,6 @@ echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n";
 	emulators.</p>
 	<p>last updated: <?php echo $last_edit_date; ?><br />
 	version: <?php echo $version; ?></p>
-	<p><a href="/viewer.php?file=enigma.php">view the source</a></p>
 	<pre>
 	<?php icall($GLOBALS); ?>
 	</pre>
