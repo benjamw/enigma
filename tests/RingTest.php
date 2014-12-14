@@ -183,4 +183,16 @@ class RingTest extends Tests\Base
 		$this->assertEquals(17, $this->Ring->getPos( ));
 	}
 
+/* TODO: write tests for:
+	stepping
+	not stepping when not supposed to
+	not stepping next when not supposed to
+	setting manual rings for each type
+	using manual rings for each type
+	getting the type value from the rings
+	throwing exceptions for __construct
+	Ring::isExtra
+	Ring::toIndex for arrays
+*/
+
 }
