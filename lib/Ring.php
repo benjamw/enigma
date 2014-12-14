@@ -389,17 +389,8 @@ class Ring {
 			$ring_setting = 0;
 		}
 
-		if ( ! is_numeric($ring_setting)) {
-			$ring_setting = strpos(self::$RING[0][0], $ring_setting);
-		}
-
-		$ring_setting = (int) $ring_setting;
-
-		if ( ! is_numeric($ground_setting)) {
-			$ground_setting = strpos(self::$RING[0][0], $ground_setting);
-		}
-
-		$ground_setting = (int) $ground_setting;
+		$ring_setting = self::toIndex($ring_setting);
+		$ground_setting = self::toIndex($ground_setting);
 
 		$temp_ring = $this->ring;
 
@@ -439,9 +430,7 @@ class Ring {
 		}
 
 		// step the actual ring (move the first char to the end of the line)
-		$first_char = $this->ring{0};
-		$remainder = substr($this->ring, 1);
-		$this->ring = $remainder . $first_char;
+		$this->ring = self::stepChar($this->ring);
 
 		// step the ring position (increase it by one, unless it's Z, then start over)
 		$this->pos = self::normalize($this->pos + 1);
@@ -476,7 +465,7 @@ class Ring {
 	 * @return string
 	 */
 	public function encode($letter, $backward = false) {
-		$letter_idx = strpos(self::$RING[0][0], $letter);
+		$letter_idx = self::toIndex($letter);
 
 		// TODO: add descriptive comment about how this works
 		if ( ! $backward) {
@@ -527,6 +516,27 @@ class Ring {
 
 
 	/**
+	 * Step the ring string by moving the first char to
+	 * the end of the string
+	 *
+	 * @param string $ring
+	 * @param int $steps
+	 *
+	 * @return string
+	 */
+	public static function stepChar($ring, $steps = 1) {
+		while (0 < $steps) {
+			$first_char = $ring{0};
+			$remainder = substr($ring, 1);
+			$ring = $remainder . $first_char;
+			--$steps;
+		}
+
+		return $ring;
+	}
+
+
+	/**
 	 * Normalize a value to remain between two values
 	 *
 	 * @param int $value
@@ -555,6 +565,36 @@ class Ring {
 		}
 
 		return $value;
+	}
+
+
+	/**
+	 * Convert string character indexes to numeric indexes
+	 *
+	 * @param int|string|array $value index value
+	 * @param string $string optional string to index
+	 *
+	 * @return int|array
+	 */
+	public static function toIndex($value, $string = null) {
+		if (is_array($value)) {
+			foreach ($value as & $val) { // mind the reference
+				$val = self::toIndex($val);
+			}
+			unset($val); // kill the reference
+
+			return $value;
+		}
+
+		if (is_numeric($value)) {
+			return self::normalize($value);
+		}
+
+		if (is_null($string)) {
+			$string = self::$RING[0][0];
+		}
+
+		return (int) strpos($string, $value);
 	}
 
 }
