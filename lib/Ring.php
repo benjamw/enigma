@@ -546,6 +546,10 @@ class Ring {
 	 * @return int
 	 */
 	public static function normalize($value, $min = 0, $max = 26) {
+		$value = (int) $value;
+		$min = (int) $min;
+		$max = (int) $max;
+
 		if ($max == $min) {
 			return $min;
 		}
