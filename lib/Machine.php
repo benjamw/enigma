@@ -24,22 +24,151 @@ class Machine {
 	 * @var array
 	 */
 	private $SETTINGS = array(
-		// M1, M2, M3
+		// Enigma C
+		// NOT ENOUGH INFO TO USE THIS MACHINE
+/*		'C' => array(
+			'name' => 'Enigma C',
+			'entry' => array( ),
+			'rings' => array( ),
+			'reflector' => array( ),
+			'settable_reflector' => false,
+			'movable_reflector' => false,
+			'stecker' => false,
+			'double' => true,
+			'display' => 'alpha',
+		),
+*/
+
+		// Enigma D (A26)
+		'D' => array(
+			'name' => 'Enigma D (A26)',
+			'entry' => array('ETW-Q'),
+			'rings' => array('I-D', 'II-D', 'III-D'),
+			'reflector' => array('UKW'),
+			'settable_reflector' => true,
+			'movable_reflector' => false,
+			'stecker' => false,
+			'double' => true,
+			'display' => 'alpha',
+		),
+
+		// Enigma K (A27)
+		'K' => array(
+			'name' => 'Enigma K (A27)',
+			'entry' => array('ETW-Q'),
+			'rings' => array('I-D', 'II-D', 'III-D'),
+			'reflector' => array('UKW'),
+			'settable_reflector' => true,
+			'movable_reflector' => false,
+			'stecker' => false,
+			'double' => true,
+			'display' => 'alpha',
+		),
+
+		// Swiss Enigma K (Swiss-K)
+		'SK' => array(
+			'name' => 'Swiss Enigma K (Swiss-K)',
+			'entry' => array('ETW-Q'),
+			'rings' => array('I-SK', 'II-SK', 'III-SK'),
+			'reflector' => array('UKW'),
+			'settable_reflector' => true,
+			'movable_reflector' => false,
+			'stecker' => false,
+			'double' => true,
+			'display' => 'alpha',
+		),
+
+		// Japanese Enigma T (Tirpitz)
+		'T' => array(
+			'name' => 'Japanese Enigma T (Tirpitz)',
+			'entry' => array('ETW-T'),
+			'rings' => array('I-T', 'II-T', 'III-T', 'IV-T', 'V-T', 'VI-T', 'VII-T', 'VIII-T'),
+			'reflector' => array('UKW-T'),
+			'settable_reflector' => true,
+			'movable_reflector' => true,
+			'stecker' => false,
+			'double' => true,
+			'display' => 'alpha',
+		),
+
+		// Enigma KD
+		'KD' => array(
+			'name' => 'Enigma KD',
+			'entry' => array('ETW-Q'),
+			'rings' => array('I-T', 'II-T', 'III-T', 'IV-T', 'V-T', 'VI-T', 'VII-T', 'VIII-T'),
+			'reflector' => array('UKW-D'),
+			'settable_reflector' => true,
+			'movable_reflector' => true,
+			'stecker' => false,
+			'double' => true,
+			'display' => 'alpha',
+		),
+
+		// Enigma I
 		'I' => array(
-			'entry' => array('ETW'),
+			'name' => 'Enigma I',
+			'entry' => array('ETW-A'),
 			'rings' => array('I', 'II', 'III', 'IV', 'V'),
 			'reflector' => array('A', 'B', 'C'),
+			'settable_reflector' => false,
+			'movable_reflector' => false,
 			'stecker' => true,
 			'double' => true,
+			'display' => 'digits',
 		),
-		'Norway' => array(
-			'entry' => array('ETW'),
+
+		// Norway Enigma
+		'N' => array(
+			'name' => 'Norway Enigma',
+			'entry' => array('ETW-A'),
 			'rings' => array('In', 'IIn', 'IIIn', 'IVn', 'Vn'),
 			'reflector' => array('UKWn'),
+			'settable_reflector' => false,
+			'movable_reflector' => false,
 			'stecker' => true,
 			'double' => true,
+			'display' => 'digits',
 		),
-// TODO: add more, and make sure the above are correct
+
+		// Enigma M1, M2, M3
+		'M3' => array(
+			'name' => 'Enigma M1, M2, M3',
+			'entry' => array('ETW-A'),
+			'rings' => array('I', 'II', 'III', 'IV', 'V'),
+			'reflector' => array('B', 'C'),
+			'settable_reflector' => false,
+			'movable_reflector' => false,
+			'stecker' => true,
+			'double' => true,
+			'display' => 'alpha',
+		),
+
+		// Enigma M1, M2, M3 Navy
+		'M3N' => array(
+			'name' => 'Enigma M1, M2, M3 Navy',
+			'entry' => array('ETW-A'),
+			'rings' => array('I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VII'),
+			'reflector' => array('B', 'C'),
+			'settable_reflector' => false,
+			'movable_reflector' => false,
+			'stecker' => true,
+			'double' => true,
+			'display' => 'alpha',
+		),
+
+		// Enigma M1, M2, M3 Navy
+		'M4' => array(
+			'name' => 'Enigma M4',
+			'entry' => array('ETW-A'),
+			'rings' => array('I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VII'),
+			'extra' => array('Beta', 'Gamma'),
+			'reflector' => array('Bt', 'Ct'),
+			'settable_reflector' => false,
+			'movable_reflector' => false,
+			'stecker' => true,
+			'double' => true,
+			'display' => 'alpha',
+		),
 	);
 
 
@@ -207,7 +336,7 @@ class Machine {
 			'ground' => 0,
 		);
 
-		$has_stator = $has_reflector = false;
+		$has_stator = $has_extra = $has_reflector = false;
 		foreach ($ring_settings as $ring_setting) {
 			$ring_setting = array_merge($defaults, $ring_setting);
 
@@ -221,7 +350,7 @@ class Machine {
 
 		if ( ! $has_stator) {
 			// set the most common stator
-			array_unshift($this->rings, new Ring('ETW'));
+			array_unshift($this->rings, new Ring('ETW-A'));
 		}
 
 		if ( ! $has_reflector) {

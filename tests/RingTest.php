@@ -36,7 +36,7 @@ class RingTest extends Tests\Base
 	}
 
 	protected function setupStatorRing($do_pos = false) {
-		$this->Ring->setRing('ETWr');
+		$this->Ring->setRing('ETW-Q');
 
 		if ($do_pos) {
 			$this->Ring->setRingPosition('T', 'R');
@@ -138,7 +138,7 @@ class RingTest extends Tests\Base
 	}
 
 	public function test_stator_ring_static_true( ) {
-		$this->assertTrue(Ring::isStator('ETWr'));
+		$this->assertTrue(Ring::isStator('ETW-Q'));
 	}
 
 	public function test_stator_ring_static_false( ) {
@@ -170,7 +170,7 @@ class RingTest extends Tests\Base
 	}
 
 	public function test_reflector_ring_static_false( ) {
-		$this->assertFalse(Ring::isReflector('ETWr'));
+		$this->assertFalse(Ring::isReflector('ETW-Q'));
 	}
 
 	public function test_set_reflector_ring_pos( ) {
