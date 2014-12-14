@@ -222,6 +222,25 @@ class MachineTest extends \Tests\Base
 		$this->assertEquals('SAVGU JIAPL', $encoded);
 	}
 
+	public function test_encode_single( ) {
+		$this->setupMachine( );
+		$this->Machine->clearMessage( );
+
+		$this->Machine->encode('h');
+		$this->Machine->encode('e');
+		$this->Machine->encode('l');
+		$this->Machine->encode('l');
+		$this->Machine->encode('o');
+
+		$this->Machine->encode('w');
+		$this->Machine->encode('o');
+		$this->Machine->encode('r');
+		$this->Machine->encode('l');
+		$this->Machine->encode('d');
+
+		$this->assertEquals('SAVGU JIAPL', $this->Machine->output);
+	}
+
 	public function test_B_compatibility( ) {
 		$this->setupBCompatibilityCompare( );
 		$encoded_m3 = $this->Machine->encode('SAVGU JIAPL');

@@ -236,6 +236,16 @@ class Machine {
 
 
 	/**
+	 * Pre-cleaned input
+	 *
+	 * @var string
+	 */
+	public $raw_input;
+
+
+	/**
+	 * Cleaned input
+	 *
 	 * @var string
 	 */
 	public $input;
@@ -500,35 +510,55 @@ class Machine {
 	/**
 	 * Clean the incoming message
 	 *
-	 * @param string $message
+	 * @param string $message optional
 	 *
 	 * @return string
 	 */
-	public function cleanMessage($message) {
-		$this->input = $message;
+	public function cleanMessage ($message = null) {
+		if ( ! is_null($message)) {
+			$this->raw_input = $message;
+		}
 
-		$message = strtoupper($message);
+		$message = strtoupper($this->raw_input);
 
 		if ($this->strict) {
+			// replace full stops with "X"
+			$message = str_replace('.', 'X', $message);
+
+			// wrap number groups with "Y" and "X"
+			$message = preg_replace('%\d+%', 'Y$1X', $message);
+
+			// replace numbers with their alphabetical counterparts
 			$message = str_replace(array_keys($this->numbers), $this->numbers, $message);
+
+			// remove spaces and group
 			$message = preg_replace('%[^A-Z]+%', '', $message);
 			$message = preg_replace('%([A-Z]{'.$this->groupings.'})%', '$1 ', $message);
 		}
 
-		return trim($message);
+		$this->input = trim($message);
+
+		return $this->input;
 	}
 
 
 	/**
-	 * @param string $message
+	 * Clean the outgoing message
+	 *
+	 * @param string $message optional
 	 *
 	 * @return string
 	 */
-	public function cleanReturn($message) {
-		$message = strtoupper($message);
+	public function cleanReturn($message = null) {
+		if ( ! is_null($message)) {
+			$this->output = $message;
+		}
+
+		$message = strtoupper($this->output);
 
 		if ($this->strict) {
-			$message = preg_replace('%\s+%', '', $message);
+			// remove spaces and group
+			$message = preg_replace('%[^A-Z]+%', '', $message);
 			$message = preg_replace('%([A-Z]{'.$this->groupings.'})%', '$1 ', $message);
 		}
 
@@ -539,32 +569,67 @@ class Machine {
 
 
 	/**
-	 * Encode the message through the machine
+	 * Clear the message
 	 *
-	 * @param string $incoming message
+	 * @param void
+	 *
+	 * @return void
+	 */
+	public function clearMessage( ) {
+		$this->raw_input = '';
+		$this->input = '';
+		$this->output = '';
+	}
+
+
+	/**
+	 * Encode the message/character through the machine
+	 *
+	 * @param string $incoming incoming message or character
+	 * @param bool $clear optional clear previous message
 	 *
 	 * @return string outgoing message
 	 */
-	public function encode($incoming) {
-		$message = $this->cleanMessage($incoming);
-		$enc_message = '';
+	public function encode($incoming, $clear = false) {
+		if ($clear) {
+			$this->clearMessage( );
+		}
 
-		while (0 !== strlen($message)) {
-			$letter = self::charPop($message);
+		// because the length of the raw input may be different than the input
+		// due to formatting in the cleanMessage method, the length must be
+		// pulled from the difference in the cleaned input before and after
+		// appending the $incoming portion of the message
+		$this->cleanMessage( );
+		$pre_len = strlen($this->input);
+
+		$this->raw_input .= $incoming;
+		$message = $this->cleanMessage( );
+		$post_len = strlen($message);
+
+		$new_len = $post_len - $pre_len;
+		$len = $post_len - $new_len;
+
+		// remove the portion of the message that has already been encoded
+		while ($len--) {
+			self::charShift($message);
+		}
+
+		while (0 < strlen($message)) {
+			$letter = self::charShift($message);
 
 			// make sure the next character is a letter
 			if (false === strpos(self::$RING, $letter)) {
 				// add the non-letter to the outgoing message unchanged
-				$enc_message .= $letter;
+				$this->output .= $letter;
 				continue;
 			}
 
 			$this->stepRings( );
 
-			$enc_message .= $this->encode_letter($letter);
+			$this->output .= $this->encodeLetter($letter);
 		}
 
-		return $this->cleanReturn($enc_message);
+		return $this->cleanReturn( );
 	}
 
 
@@ -616,7 +681,7 @@ class Machine {
 	 *
 	 * @return string
 	 */
-	public function encode_letter($letter) {
+	public function encodeLetter($letter) {
 		// run it through the stecker
 		$letter = $this->stecker[$letter];
 
@@ -646,15 +711,15 @@ class Machine {
 
 
 	/**
-	 * Pop the leading character off the message
+	 * Shift the leading character off the message
 	 *
 	 * @param string $message reference
 	 *
-	 * @return string
+	 * @return string shifted character
 	 */
-	public static function charPop(& $message) {
+	public static function charShift(& $message) {
 		// pop the leading character off the message
-		$letter  = $message[0];
+		$letter  = $message{0};
 		$message = substr($message, 1);
 
 		return $letter;

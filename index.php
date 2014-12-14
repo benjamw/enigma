@@ -42,5 +42,17 @@
 	$E = new Machine( );
 
 	$E->processSettings($settings);
+	$E->clearMessage( );
 
-	echo $E->encode('SAVGU JIAPL');
+	$E->encode('S');
+	$E->encode('A');
+	$E->encode('V');
+	$E->encode('G');
+	$E->encode('U');
+	$E->encode('J');
+	$E->encode('I');
+	$E->encode('A');
+	$E->encode('P');
+	$E->encode('L');
+
+	echo $E->output;
