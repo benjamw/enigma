@@ -350,10 +350,10 @@ if (isset($_POST['incoming']) && ('' != $_POST['incoming']))
 		if ($strict)
 		{
 			// split outgoing message into $grouping size chunks
-			$outgoing = preg_replace("/([A-Z]{{$grouping}})/", '$1 ', $enc_message);
+			$outgoing = preg_replace('/([A-Z]{'.$grouping.'})/', '$1 ', $enc_message);
 
 			// split incoming message into $grouping size chunks
-			$incoming = preg_replace("/([A-Z]{{$grouping}})/", '$1 ', $incoming);
+			$incoming = preg_replace('/([A-Z]{'.$grouping.'})/', '$1 ', $incoming);
 		}
 		else
 		{

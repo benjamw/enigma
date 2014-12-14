@@ -383,7 +383,7 @@ class Machine {
 		if ($this->strict) {
 			$message = str_replace(array_keys($this->numbers), $this->numbers, $message);
 			$message = preg_replace('%[^A-Z]+%', '', $message);
-			$message = preg_replace("%([A-Z]{{$this->groupings}})%", '$1 ', $message);
+			$message = preg_replace('%([A-Z]{'.$this->groupings.'})%', '$1 ', $message);
 		}
 
 		return trim($message);
@@ -400,7 +400,7 @@ class Machine {
 
 		if ($this->strict) {
 			$message = preg_replace('%\s+%', '', $message);
-			$message = preg_replace("%([A-Z]{{$this->groupings}})%", '$1 ', $message);
+			$message = preg_replace('%([A-Z]{'.$this->groupings.'})%', '$1 ', $message);
 		}
 
 		$this->output = trim($message);
