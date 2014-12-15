@@ -261,16 +261,12 @@ class Machine {
 	 * Class constructor
 	 *
 	 * @param array $settings optional
-	 * @param string $message optional
 	 *
-	 * @return string coded message
 	 * @throws \Exception
 	 */
-	public function __construct($settings = array( ), $message = '') {
+	public function __construct($settings = array( )) {
 		try {
 			$this->processSettings($settings);
-
-			return $this->encode($message);
 		}
 		catch (\Exception $poo) {
 			throw $poo;
