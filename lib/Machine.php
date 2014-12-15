@@ -30,6 +30,7 @@ class Machine {
 			'name' => 'Enigma C',
 			'entry' => array( ),
 			'rings' => array( ),
+			'extra' => array( ),
 			'reflector' => array( ),
 			'settable_reflector' => false,
 			'movable_reflector' => false,
@@ -40,23 +41,12 @@ class Machine {
 */
 
 		// Enigma D (A26)
-		'D' => array(
-			'name' => 'Enigma D (A26)',
-			'entry' => array('ETW-Q'),
-			'rings' => array('I-D', 'II-D', 'III-D'),
-			'reflector' => array('UKW'),
-			'settable_reflector' => true,
-			'movable_reflector' => false,
-			'stecker' => false,
-			'double' => true,
-			'display' => 'alpha',
-		),
-
 		// Enigma K (A27)
-		'K' => array(
-			'name' => 'Enigma K (A27)',
+		'D' => array(
+			'name' => 'Enigma D, K',
 			'entry' => array('ETW-Q'),
 			'rings' => array('I-D', 'II-D', 'III-D'),
+			'extra' => array( ),
 			'reflector' => array('UKW'),
 			'settable_reflector' => true,
 			'movable_reflector' => false,
@@ -70,6 +60,7 @@ class Machine {
 			'name' => 'Swiss Enigma K (Swiss-K)',
 			'entry' => array('ETW-Q'),
 			'rings' => array('I-SK', 'II-SK', 'III-SK'),
+			'extra' => array( ),
 			'reflector' => array('UKW'),
 			'settable_reflector' => true,
 			'movable_reflector' => false,
@@ -83,6 +74,7 @@ class Machine {
 			'name' => 'Japanese Enigma T (Tirpitz)',
 			'entry' => array('ETW-T'),
 			'rings' => array('I-T', 'II-T', 'III-T', 'IV-T', 'V-T', 'VI-T', 'VII-T', 'VIII-T'),
+			'extra' => array( ),
 			'reflector' => array('UKW-T'),
 			'settable_reflector' => true,
 			'movable_reflector' => true,
@@ -96,6 +88,7 @@ class Machine {
 			'name' => 'Enigma KD',
 			'entry' => array('ETW-Q'),
 			'rings' => array('I-T', 'II-T', 'III-T', 'IV-T', 'V-T', 'VI-T', 'VII-T', 'VIII-T'),
+			'extra' => array( ),
 			'reflector' => array('UKW-D'),
 			'settable_reflector' => true,
 			'movable_reflector' => true,
@@ -109,6 +102,7 @@ class Machine {
 			'name' => 'Enigma I',
 			'entry' => array('ETW-A'),
 			'rings' => array('I', 'II', 'III', 'IV', 'V'),
+			'extra' => array( ),
 			'reflector' => array('A', 'B', 'C'),
 			'settable_reflector' => false,
 			'movable_reflector' => false,
@@ -122,6 +116,7 @@ class Machine {
 			'name' => 'Norway Enigma',
 			'entry' => array('ETW-A'),
 			'rings' => array('In', 'IIn', 'IIIn', 'IVn', 'Vn'),
+			'extra' => array( ),
 			'reflector' => array('UKWn'),
 			'settable_reflector' => false,
 			'movable_reflector' => false,
@@ -135,6 +130,7 @@ class Machine {
 			'name' => 'Enigma M1, M2, M3',
 			'entry' => array('ETW-A'),
 			'rings' => array('I', 'II', 'III', 'IV', 'V'),
+			'extra' => array( ),
 			'reflector' => array('B', 'C'),
 			'settable_reflector' => false,
 			'movable_reflector' => false,
@@ -148,6 +144,7 @@ class Machine {
 			'name' => 'Enigma M1, M2, M3 Navy',
 			'entry' => array('ETW-A'),
 			'rings' => array('I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VII'),
+			'extra' => array( ),
 			'reflector' => array('B', 'C'),
 			'settable_reflector' => false,
 			'movable_reflector' => false,
@@ -156,7 +153,7 @@ class Machine {
 			'display' => 'alpha',
 		),
 
-		// Enigma M1, M2, M3 Navy
+		// Enigma M4
 		'M4' => array(
 			'name' => 'Enigma M4',
 			'entry' => array('ETW-A'),
