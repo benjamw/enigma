@@ -1,58 +1,38 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
-	namespace Enigma;
+	<meta charset="utf-8">
+	<title>Enigma Emulator</title>
+	<meta name="description" content="An Enigma Emulator that emulates most Enigma Machines">
+	<meta name="author" content="Benjam">
 
-	require_once '/lib/Machine.php';
-	require_once '/lib/Ring.php';
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	$settings = array(
-		'stecker' => array(
-			2 => 23,
-			4 => 5,
-			6 => 26,
-			8 => 24,
-			9 => 19,
-			14 => 20,
-			18 => 21,
-		),
-		'rings' => array(
-			array(
-				'type' => 'IV',
-				'ring' => 'M',
-				'ground' => 'H',
-			),
-			array(
-				'type' => 'II',
-				'ring' => 'O',
-				'ground' => 'D',
-			),
-			array(
-				'type' => 'III',
-				'ring' => 'S',
-				'ground' => 'W',
-			),
-			array(
-				'type' => 'B',
-			),
-		),
-		'strict' => true,
-		'group' => 5,
-	);
+	<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
 
-	$E = new Machine( );
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/skeleton.css">
 
-	$E->processSettings($settings);
-	$E->clearMessage( );
+	<link rel="icon" type="image/png" href="images/favicon.png"/>
 
-	$E->encode('S');
-	$E->encode('A');
-	$E->encode('V');
-	$E->encode('G');
-	$E->encode('U');
-	$E->encode('J');
-	$E->encode('I');
-	$E->encode('A');
-	$E->encode('P');
-	$E->encode('L');
+	<!--[if IE]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
 
-	echo $E->output;
+</head>
+<body>
+
+<div class="container">
+	<div class="row">
+		<h1>Enigma Emulator</h1>
+		<form action="<?= basename(__FILE__); ?>" method="post">
+			<div class="row">
+
+			</div>
+		</form>
+	</div>
+</div>
+
+</body>
+</html>
