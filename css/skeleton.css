@@ -363,6 +363,18 @@ hr {
   display: table;
   clear: both; }
 
+/* Other
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+hr {
+  clear: both;
+  border: 0;
+  border-bottom: 1px solid #777;
+  width: 80%; }
+hr.bold {
+  border-bottom: 2px solid #000;
+  width: 100%; }
+
 
 /* Media Queries
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
