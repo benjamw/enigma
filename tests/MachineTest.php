@@ -6,9 +6,11 @@
 // $> vendor\bin\phpunit UnitTest tests\MachineTest.php
 // from the enigma directory
 
+namespace Tests;
+
 use \Enigma\Machine;
 
-class MachineTest extends \Tests\Base
+class MachineTest extends Base
 {
 
 	public $Machine;
@@ -52,6 +54,51 @@ class MachineTest extends \Tests\Base
 			),
 			'strict' => true,
 			'group' => 5,
+		);
+		$this->Machine->processSettings($settings);
+	}
+
+	public function setupDonitzMachine( ) {
+		$settings = array(
+			'stecker' => array(
+				'AE',
+				'BF',
+				'CM',
+				'DQ',
+				'HU',
+				'JN',
+				'LX',
+				'PR',
+				'SZ',
+				'VW',
+			),
+			'rings' => array(
+				array(
+					'type' => 'VIII',
+					'ring' => 'L',
+					'ground' => 'M',
+				),
+				array(
+					'type' => 'VI',
+					'ring' => 'E',
+					'ground' => 'E',
+				),
+				array(
+					'type' => 'V',
+					'ring' => 'P',
+					'ground' => 'A',
+				),
+				array(
+					'type' => 'Beta',
+					'ring' => 'E',
+					'ground' => 'N'
+				),
+				array(
+					'type' => 'Ct',
+				),
+			),
+			'strict' => true,
+			'group' => 4,
 		);
 		$this->Machine->processSettings($settings);
 	}
@@ -239,6 +286,12 @@ class MachineTest extends \Tests\Base
 		$this->Machine->encode('d');
 
 		$this->assertEquals('SAVGU JIAPL', $this->Machine->output);
+	}
+
+	public function testDonitzKey( ) {
+		$this->setupDonitzMachine( );
+		$encoded = $this->Machine->encode('QEOB');
+		$this->assertEquals('CDSZ', $encoded);
 	}
 
 	public function test_B_compatibility( ) {

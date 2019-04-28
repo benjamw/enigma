@@ -6,9 +6,11 @@
 // $> vendor\bin\phpunit UnitTest tests\RingTest.php
 // from the enigma directory
 
+namespace Tests;
+
 use \Enigma\Ring;
 
-class RingTest extends Tests\Base
+class RingTest extends Base
 {
 
 	public $Ring;
@@ -89,7 +91,7 @@ class RingTest extends Tests\Base
 
 	public function test_set_ring_string( ) {
 		$this->setupRing( );
-		$this->assertEquals('VZBRGITYUPSDNHLXAWMJQOFECK', $this->Ring->getRing( ));
+		$this->assertEquals('VZBRGITYUPSDNHLXAWMJQOFECK', $this->Ring->getString( ));
 	}
 
 	public function test_set_ring_step_pos( ) {
@@ -109,7 +111,7 @@ class RingTest extends Tests\Base
 
 	public function test_set_dual_ring_string( ) {
 		$this->setupDualRing( );
-		$this->assertEquals('NZJHGRCXMYSWBOUFAIVLPEKQDT', $this->Ring->getRing( ));
+		$this->assertEquals('NZJHGRCXMYSWBOUFAIVLPEKQDT', $this->Ring->getString( ));
 	}
 
 	public function test_set_dual_ring_step_pos( ) {
@@ -129,7 +131,7 @@ class RingTest extends Tests\Base
 
 	public function test_set_stator_ring_string( ) {
 		$this->setupStatorRing( );
-		$this->assertEquals('QWERTZUIOASDFGHJKPYXCVBNML', $this->Ring->getRing( ));
+		$this->assertEquals('QWERTZUIOASDFGHJKPYXCVBNML', $this->Ring->getString( ));
 	}
 
 	public function test_set_stator_ring_stator( ) {
@@ -157,7 +159,7 @@ class RingTest extends Tests\Base
 
 	public function test_set_reflector_ring_string( ) {
 		$this->setupReflectorRing( );
-		$this->assertEquals('ENKQAUYWJICOPBLMDXZVFTHRGS', $this->Ring->getRing( ));
+		$this->assertEquals('ENKQAUYWJICOPBLMDXZVFTHRGS', $this->Ring->getString( ));
 	}
 
 	public function test_set_reflector_ring_stator( ) {

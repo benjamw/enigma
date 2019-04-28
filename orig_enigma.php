@@ -137,7 +137,7 @@ $STEP_V    = 25; // Z
 // set the strict flag
 $strict = (isset($_POST['strict']) && ('yes' == $_POST['strict'])) ? true : false;
 
-// if we have some text to encode, lets do it
+// if there is text to encode, do it
 if (isset($_POST['incoming']) && ('' != $_POST['incoming']))
 {
 	if ($strict)
@@ -156,13 +156,13 @@ if (isset($_POST['incoming']) && ('' != $_POST['incoming']))
 
 	foreach ($_POST['board'] as $plug)
 	{
-		// make sure we have a plug board entry here
+		// make sure there is a plug board entry here
 		if ('' == $plug)
 		{
 			continue;
 		}
 
-		// make sure we have a complete plug board entry here
+		// make sure there is a complete plug board entry here
 		if (2 != strlen($plug))
 		{
 			$error = 'Plug Board (stecker) entry is not two characters';
@@ -234,7 +234,7 @@ if (isset($_POST['incoming']) && ('' != $_POST['incoming']))
 		// edit the stecker array
 		foreach ($_POST['board'] as $plug)
 		{
-			// make sure we have a plug board entry here
+			// make sure there is a plug board entry here
 			if ('' == $plug)
 			{
 				continue;
@@ -254,9 +254,9 @@ if (isset($_POST['incoming']) && ('' != $_POST['incoming']))
 
 			// step any rings that need to be stepped
 			// step from slow to fast because the position will change when the ring is stepped
-			// and we need to know the position to know which rings to step
+			// the position needs to be known to know which rings to step
 			// if the fast ring is stepping the middle ring
-			$middle_stepped = false; // we need to keep track of the middle ring stepping
+			$middle_stepped = false; // keep track of the middle ring stepping for double step quirk
 			if ($fast_pos == $fast_step)
 			{
 				// if the middle ring is stepping the slow ring
@@ -269,14 +269,14 @@ if (isset($_POST['incoming']) && ('' != $_POST['incoming']))
 
 				// step the middle ring
 				step_ring($middle, $middle_pos);
-				$middle_stepped = true; // make sure we don't step the middle ring twice if it's at it's stepping point
+				$middle_stepped = true; // make sure the middle ring isn't stepped twice if it's at it's stepping point
 						icall('STEPPING MIDDLE');icall('middle');icall('middle_pos');icall($RING[normalize($middle_pos + strpos($RING, $_POST['b_ring_setting']))]);
 			}
 
 			// there is a quirk with the enigma where, even though
 			// the fast ring is not stepping the middle ring,
 			// the middle ring steps the slow ring (and itself)
-			// account for that here (but only if we didn't just barely step the middle ring)
+			// account for that here (but only if the middle ring wasn't just stepped)
 			if ((false === $middle_stepped) && ($middle_pos == $middle_step))
 			{
 				// step the slow ring
@@ -593,7 +593,7 @@ function selected($var1, $var2, $checked = false) {
 // debug function
 function icall($var = '^^k8)SJ2di!U')
 {
-	// only output the debugging info if we are in debugging mode
+	// only output the debugging info in debugging mode
 	if ( ! isset($_GET['debug']))
 	{
 		return false;
@@ -605,7 +605,7 @@ function icall($var = '^^k8)SJ2di!U')
 	}
 	else
 	{
-		// begin output buffering so we can escape any html
+		// begin output buffering so html can be escaped
 		ob_start( );
 
 		if (is_string($var) && isset($GLOBALS[$var]))

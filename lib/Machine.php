@@ -1,5 +1,7 @@
 <?php
 
+// TODO: allow the UKW-D to be manually adjusted as it really was
+
 namespace Enigma;
 
 class Machine {
@@ -11,6 +13,8 @@ class Machine {
 	const FAST = 1;
 	const MIDDLE = 2;
 	const SLOW = 3;
+	const THIN = 4;
+	const REFLECTOR = 5;
 
 	/**
 	 * @var string
@@ -23,7 +27,7 @@ class Machine {
 	 *
 	 * @var array
 	 */
-	private $SETTINGS = array(
+	private $MACHINES = array(
 		// Enigma C
 		// NOT ENOUGH INFO TO USE THIS MACHINE
 /*		'C' => array(
@@ -48,6 +52,20 @@ class Machine {
 			'rings' => array('I-D', 'II-D', 'III-D'),
 			'extra' => array( ),
 			'reflector' => array('UKW'),
+			'settable_reflector' => true,
+			'movable_reflector' => false,
+			'stecker' => false,
+			'double' => true,
+			'display' => 'alpha',
+		),
+
+		// Railway Enigma K (Rocket)
+		'R' => array(
+			'name' => 'Railway Enigma K (Rocket)',
+			'entry' => array('ETW-Q'),
+			'rings' => array('I-R', 'II-R', 'III-R'),
+			'extra' => array( ),
+			'reflector' => array('UKW-R'),
 			'settable_reflector' => true,
 			'movable_reflector' => false,
 			'stecker' => false,
@@ -87,7 +105,7 @@ class Machine {
 		'KD' => array(
 			'name' => 'Enigma KD',
 			'entry' => array('ETW-Q'),
-			'rings' => array('I-T', 'II-T', 'III-T', 'IV-T', 'V-T', 'VI-T', 'VII-T', 'VIII-T'),
+			'rings' => array('I-KD', 'II-KD', 'III-KD'),
 			'extra' => array( ),
 			'reflector' => array('UKW-D'),
 			'settable_reflector' => true,
@@ -97,9 +115,9 @@ class Machine {
 			'display' => 'alpha',
 		),
 
-		// Enigma I
+		// Enigma I (the main Nazi Enigma)
 		'I' => array(
-			'name' => 'Enigma I',
+			'name' => 'Enigma I (Nazi Enigma)',
 			'entry' => array('ETW-A'),
 			'rings' => array('I', 'II', 'III', 'IV', 'V'),
 			'extra' => array( ),
@@ -115,9 +133,9 @@ class Machine {
 		'N' => array(
 			'name' => 'Norway Enigma',
 			'entry' => array('ETW-A'),
-			'rings' => array('In', 'IIn', 'IIIn', 'IVn', 'Vn'),
+			'rings' => array('I-N', 'II-N', 'III-N', 'IV-N', 'V-N'),
 			'extra' => array( ),
-			'reflector' => array('UKWn'),
+			'reflector' => array('UKW-N'),
 			'settable_reflector' => false,
 			'movable_reflector' => false,
 			'stecker' => true,
@@ -170,7 +188,7 @@ class Machine {
 
 
 	/**
-	 * The stecker (plugboard) settings
+	 * The plug board settings (Steckerbrett)
 	 *
 	 * @var array
 	 */
@@ -189,6 +207,9 @@ class Machine {
 
 	/**
 	 * Number translation array
+	 *
+	 * This is used to convert numbers to letters
+	 * so they can be translated by the machine
 	 *
 	 * @var array
 	 */
@@ -209,7 +230,7 @@ class Machine {
 
 
 	/**
-	 * Should the emulator emulate a real machine
+	 * Should the emulator allow invalid settings to be used
 	 *
 	 * @var bool
 	 */
@@ -249,6 +270,8 @@ class Machine {
 
 
 	/**
+	 * Coded output
+	 *
 	 * @var string
 	 */
 	public $output;
@@ -265,9 +288,37 @@ class Machine {
 		try {
 			$this->processSettings($settings);
 		}
-		catch (\Exception $poo) {
-			throw $poo;
+		catch (\Exception $e) {
+			throw $e;
 		}
+	}
+
+
+	/**
+	 * @param void
+	 *
+	 * @return string
+	 */
+	public static function getRING( ) {
+		return self::$RING;
+	}
+
+
+	/**
+	 * @param string|null $id machine setting ID
+	 *
+	 * @return array
+	 */
+	public function getMACHINES($id = null) {
+		if ( ! is_null($id)) {
+			if ( ! empty($this->MACHINES[$id])) {
+				return $this->MACHINES[$id];
+			}
+
+			return null;
+		}
+
+		return $this->MACHINES;
 	}
 
 
@@ -298,9 +349,12 @@ class Machine {
 				$this->setStecker($settings['stecker']);
 			}
 		}
-		catch (\Exception $food) {
-			throw $food;
+		catch (\Exception $e) {
+			throw $e;
 		}
+
+		// make sure these are in index order
+		ksort($settings['rings']);
 
 		try {
 			if ($this->strict) {
@@ -308,8 +362,8 @@ class Machine {
 				$this->ringTest($settings['rings']);
 			}
 		}
-		catch (\Exception $a_curve) {
-			throw $a_curve;
+		catch (\Exception $e) {
+			throw $e;
 		}
 
 		if ( ! empty($settings['rings'])) {
@@ -329,6 +383,45 @@ class Machine {
 
 
 	/**
+	 * Return a settings array that can be used to initialize an identical machine
+	 *
+	 * @param void
+	 *
+	 * @return array
+	 */
+	public function getSettings( ) {
+		$return = array(
+			'strict' => $this->strict,
+			//'machine' => $this->machine,
+			'stecker' => array( ),
+			'rings' => array( ),
+			'group' => $this->groupings,
+			'incoming' => $this->raw_input,
+		);
+
+		$stecker = $this->stecker;
+		foreach ($stecker as $in => $out) {
+			if ($in === $out) {
+				continue;
+			}
+
+			$return['stecker'][] = $in . $out;
+			unset($stecker[$out]);
+		}
+
+		foreach ($this->rings as $ring) {
+			$return['rings'][] = array(
+				'type' => $ring->getType( ),
+				'ring' => $ring->getRingSetting( ),
+				'ground' => $ring->getGroundSetting( ),
+			);
+		}
+
+		return $return;
+	}
+
+
+	/**
 	 * @param array $ring_settings array of ring settings arrays
 	 *
 	 * @return void
@@ -337,13 +430,16 @@ class Machine {
 		$defaults = array(
 			'ring' => 0,
 			'ground' => 0,
+			'adjust_step' => true,
+			'steppable' => true,
 		);
 
 		$has_stator = $has_extra = $has_reflector = false;
 		foreach ($ring_settings as $ring_setting) {
 			$ring_setting = array_merge($defaults, $ring_setting);
 
-			$new_ring = new Ring($ring_setting['type'], $ring_setting['ring'], $ring_setting['ground']);
+			$new_ring = new Ring($ring_setting['type'], $ring_setting['ring'], $ring_setting['ground'],
+								$ring_setting['adjust_step'], $ring_setting['steppable'], $this->strict);
 
 			$has_stator = $has_stator || $new_ring->is_stator;
 			$has_reflector = $has_reflector || $new_ring->is_reflector;
@@ -432,11 +528,13 @@ class Machine {
 	public function setStecker($board) {
 		$new_board = false;
 		foreach ($board as $in => $out) {
-			if ( ! $new_board && is_numeric($out)) {
-				$new_board = array( );
-			}
+			if (is_numeric($out)) {
+				if ( ! $new_board) {
+					$new_board = array();
+				}
 
-			$new_board[] = self::$RING{$in - 1} . self::$RING{$out - 1};
+				$new_board[] = self::$RING{$in - 1} . self::$RING{$out - 1};
+			}
 		}
 
 		if ($new_board) {
@@ -446,14 +544,14 @@ class Machine {
 		try {
 			$this->steckerTest($board);
 		}
-		catch (\Exception $up) {
-			throw $up;
+		catch (\Exception $e) {
+			throw $e;
 		}
 
 		$this->clearStecker( );
 
 		foreach ($board as $plug) {
-			// make sure we have a plug board entry here
+			// make sure there is a plug board entry here
 			if ('' == $plug) {
 				continue;
 			}
@@ -476,14 +574,14 @@ class Machine {
 		$stecker_test = array( );
 
 		foreach ($board as $plug) {
-			// make sure we have a plug board entry here
+			// make sure there is a plug board entry here
 			if ('' == $plug) {
 				continue;
 			}
 
 			$plug = strtoupper($plug);
 
-			// make sure we have a complete plug board entry here
+			// make sure there is a complete plug board entry here
 			if (2 !== strlen($plug)) {
 				throw new \Exception("Plug Board (stecker) entry '{$plug}' is not two characters");
 			}
@@ -507,7 +605,7 @@ class Machine {
 	 *
 	 * @return string
 	 */
-	public function cleanMessage ($message = null) {
+	public function cleanMessage($message = null) {
 		if ( ! is_null($message)) {
 			$this->raw_input = $message;
 		}
@@ -515,8 +613,25 @@ class Machine {
 		$message = strtoupper($this->raw_input);
 
 		if ($this->strict) {
-			// replace full stops with "X"
-			$message = str_replace('.', 'X', $message);
+			$replace = array(
+				'.' => 'X',
+				',' => 'Y',
+				'?' => 'UD',
+				':' => 'XX',
+				'-' => 'YY',
+				'/' => 'YY',
+				'(' => 'KK',
+				')' => 'KK',
+				"'" => 'J',
+				'"' => 'J',
+				'CH' => 'Q',
+				'00' => 'CENTA',
+				'000' => 'MILLE',
+				'0000' => 'MYRIA',
+			);
+
+			// replace punctuation with letters
+			$message = str_replace(array_keys($replace), array_values($replace), $message);
 
 			// wrap number groups with "Y" and "X"
 			$message = preg_replace('%\d+%', 'Y$1X', $message);
@@ -634,9 +749,9 @@ class Machine {
 	protected function stepRings( ) {
 		// step any rings that need to be stepped
 		// step from slow to fast because the position will change when the ring is stepped
-		// and we need to know the position to know which rings to step
+		// the position needs to be known to know which rings to step
 		// if the fast ring is stepping the middle ring
-		$middle_stepped = false; // we need to keep track of the middle ring stepping
+		$middle_stepped = false; // track the middle ring stepping for the double step quirk
 		if ($this->rings[self::FAST]->isSteppingNext( )) {
 			// if the middle ring is stepping the slow ring
 			if ($this->rings[self::MIDDLE]->isSteppingNext( )) {
@@ -646,14 +761,14 @@ class Machine {
 
 			// step the middle ring
 			$this->rings[self::MIDDLE]->step( );
-			$middle_stepped = true; // make sure we don't step the middle ring twice if it's at it's own stepping point
+			$middle_stepped = true; // don't step the middle ring twice if it's at it's own stepping point
 		}
 
 		// there is a quirk with the enigma where, even though
 		// the fast ring is not stepping the middle ring,
 		// if the middle ring is on it's stepping position
 		// the middle ring will step the slow ring (and itself)
-		// account for that here (but only if we didn't just barely step the middle ring above)
+		// account for that here (but only if the middle ring wasn't just stepped above)
 		if ($this->double_step && (false === $middle_stepped) && $this->rings[2]->isSteppingNext( )) {
 			// step the slow ring
 			$this->rings[self::SLOW]->step( );

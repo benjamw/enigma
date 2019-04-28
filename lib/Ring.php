@@ -23,6 +23,11 @@ class Ring {
 		'II-D'   => array('SLVGBTFXJQOHEWIRZYAMKPCNDU',  4), // E
 		'III-D'  => array('CJGDPSHKTURAWZXFMYNQOBVLIE', 13), // N
 
+		// Railway Enigma K (Rocket)
+		'I-R'    => array('JGDQOXUSCAMIFRVTPNEWKBLZYH', 13), // N
+		'II-R'   => array('NTZPSFBOKMWRCJDIVLAEYUXHGQ',  4), // E
+		'III-R'  => array('JVIUBHTCDYAKEQZPOSGXNRMWFL', 24), // Y
+
 		// Swiss Enigma K (Swiss-K)
 		'I-SK'   => array('PEZUOHXSCVFMTBGLRINQJWAYDK', 24), // Y
 		'II-SK'  => array('ZOUESYDKFWPCIQXHMVBLGNJRAT',  4), // E
@@ -48,11 +53,6 @@ class Ring {
 		'II-KD'  => array('HGRBSJZETDLVPMQYCXAOKINFUW', array(18, 20, 24,  0,  4,  7, 11, 13, 16)), // SUYAEHLNQ
 		'III-KD' => array('NWLHXGRBYOJSAZDVTPKFQMEUIC', array(18, 20, 24,  0,  4,  7, 11, 13, 16)), // SUYAEHLNQ
 
-		// Railway Enigma (Rocket)
-		'Ir'     => array('JGDQOXUSCAMIFRVTPNEWKBLZYH', 13), // N
-		'IIr'    => array('NTZPSFBOKMWRCJDIVLAEYUXHGQ',  4), // E
-		'IIIr'   => array('JVIUBHTCDYAKEQZPOSGXNRMWFL', 24), // Y
-
 		// Enigma I
 		// Enigma M1, M2, M3
 		// Enigma M1, M2, M3 Navy
@@ -69,16 +69,16 @@ class Ring {
 		'VIII'   => array('FKQHTLXOCBJSPDZRAMEWNIUYGV', array(25, 12)), // ZM
 
 		// Norway Enigma
-		'In'     => array('WTOKASUYVRBXJHQCPZEFMDINLG', 16), // Q
-		'IIn'    => array('GJLPUBSWEMCTQVHXAOFZDRKYNI',  4), // E
-		'IIIn'   => array('JWFMHNBPUSDYTIXVZGRQLAOEKC', 21), // V
-		'IVn'    => array('ESOVPZJAYQUIRHXLNFTGKDCMWB',  9), // J
-		'Vn'     => array('HEJXQOTZBVFDASCILWPGYNMURK', 25), // Z
+		'I-N'    => array('WTOKASUYVRBXJHQCPZEFMDINLG', 16), // Q
+		'II-N'   => array('GJLPUBSWEMCTQVHXAOFZDRKYNI',  4), // E
+		'III-N'  => array('JWFMHNBPUSDYTIXVZGRQLAOEKC', 21), // V
+		'IV-N'   => array('ESOVPZJAYQUIRHXLNFTGKDCMWB',  9), // J
+		'V-N'    => array('HEJXQOTZBVFDASCILWPGYNMURK', 25), // Z
 	);
 
 
 	/**
-	 * The stator rings
+	 * The stator (entry) rings (Eintrittswalze)
 	 *
 	 * @var array
 	 */
@@ -119,7 +119,7 @@ class Ring {
 
 
 	/**
-	 * The reflector rings
+	 * The reflector rings (Umkehrwalze)
 	 *
 	 * @var array
 	 */
@@ -131,14 +131,16 @@ class Ring {
 		// Swiss Enigma K (Swiss-K)
 		'UKW'   => array('IMETCGFRAYSQBZXWLHKDVUPOJN'),
 
-		// Japanese Enigma T (Tirpitz)
-		'UKW-T' => array('GEKPBTAUMOCNILJDXZYFHWVQSR'),
+		// Railway Enigma K (Rocket)
+		'UKW-R' => array('QYHOGNECVPUZTFDJAXWMKISRBL'),
 
 		// Enigma KD
 		'UKW-D' => array('NSUOMKLIHZFGEADVXWBYCPRQTJ'), // found setting, real reflector is changeable
+		// Other possible found settings:
+		// KOTVPNLMJIAGHFBEWYXCZDQSRU
 
-		// Railway Enigma (Rocket)
-		'UKWr'  => array('QYHOGNECVPUZTFDJAXWMKISRBL'),
+		// Japanese Enigma T (Tirpitz)
+		'UKW-T' => array('GEKPBTAUMOCNILJDXZYFHWVQSR'),
 
 		// Enigma I
 		'A'     => array('EJMZALYXVBWFCRQUONTSPIKHGD'),
@@ -149,11 +151,11 @@ class Ring {
 		'C'     => array('FVPJIAOYEDRZXWGCTKUQSBNMHL'),
 
 		// Norway Enigma
-		'UKWn'  => array('MOWJYPUXNDSRAIBFVLKZGQCHET'),
+		'UKW-N' => array('MOWJYPUXNDSRAIBFVLKZGQCHET'),
 
 		// Enigma M4
-		'Bt'    => array('ENKQAUYWJICOPBLMDXZVFTHRGS'),
-		'Ct'    => array('RDOBJNTKVEHMLFCWZAXGYIPSUQ'),
+		'Bt'    => array('ENKQAUYWJICOPBLMDXZVFTHRGS'), // Bruno
+		'Ct'    => array('RDOBJNTKVEHMLFCWZAXGYIPSUQ'), // Caesar
 	);
 
 
@@ -177,6 +179,22 @@ class Ring {
 	 * @var bool
 	 */
 	protected $is_steppable;
+
+
+	/**
+	 * The ring setting
+	 *
+	 * @var int
+	 */
+	protected $ring_setting;
+
+
+	/**
+	 * The ground setting
+	 *
+	 * @var int
+	 */
+	protected $ground_setting;
 
 
 	/**
@@ -232,12 +250,12 @@ class Ring {
 	/**
 	 * Class constructor
 	 *
-	 * @param string $ring ID optional
-	 * @param int|string $ring_setting optional
+	 * @param string     $ring           ID optional
+	 * @param int|string $ring_setting   optional
 	 * @param int|string $ground_setting optional
-	 * @param bool $adjust_step optional adjust the step position
-	 * @param bool $steppable optional set steppable flag
-	 * @param bool $strict optional set strict mode
+	 * @param bool       $adjust_step    optional adjust the step position
+	 * @param bool       $steppable      optional set steppable flag
+	 * @param bool       $strict         optional set strict mode
 	 *
 	 * @return Ring this
 	 * @throws \InvalidArgumentException
@@ -250,14 +268,58 @@ class Ring {
 			if ( ! empty($ring)) {
 				$this->setRing($ring);
 
-				if ( ! empty($ring_setting) && ! empty($ground_setting)) {
+				if ( ! is_null($ring_setting) && ! is_null($ground_setting)) {
 					$this->setRingPosition($ring_setting, $ground_setting, $adjust_step);
 				}
 			}
 		}
-		catch (\InvalidArgumentException $up) {
-			throw $up;
+		catch (\InvalidArgumentException $e) {
+			throw $e;
 		}
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public static function getRING( ) {
+		$ring = self::$RING;
+		unset($ring[0]);
+
+		return $ring;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public static function getSTATOR( ) {
+		$stator = self::$STATOR;
+		unset($stator[0]);
+
+		return $stator;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public static function getEXTRA( ) {
+		$extra = self::$EXTRA;
+		unset($extra[0]);
+
+		return $extra;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public static function getREFLECTOR( ) {
+		$reflector = self::$REFLECTOR;
+		unset($reflector[0]);
+
+		return $reflector;
 	}
 
 
@@ -272,7 +334,7 @@ class Ring {
 	/**
 	 * @return string
 	 */
-	public function getRing( ) {
+	public function getString( ) {
 		return $this->ring;
 	}
 
@@ -294,13 +356,29 @@ class Ring {
 
 
 	/**
+	 * @return int
+	 */
+	public function getRingSetting( ) {
+		return $this->ring_setting;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getGroundSetting( ) {
+		return $this->ground_setting;
+	}
+
+
+	/**
 	 * Initialize the ring with either a ring ID
 	 * or ring settings for non-strict mode
 	 *
-	 * @param string $ring ID or ring value
-	 * @param string $type optional ring type ('ring', 'stator', 'reflector')
-	 * @param bool $rotatable_step optional ring has a rotatable notch
-	 * @param int|string|array $step_pos optional the location of the stepping position
+	 * @param string           $ring           ID or ring value
+	 * @param string           $type           optional ring type ('ring', 'stator', 'reflector')
+	 * @param bool             $rotatable_step optional ring has a rotatable notch
+	 * @param int|string|array $step_pos       optional the location of the stepping position
 	 *
 	 * @return void
 	 * @throws \InvalidArgumentException
@@ -369,7 +447,7 @@ class Ring {
 	/**
 	 * @param int|string $ring_setting
 	 * @param int|string $ground_setting
-	 * @param bool $adjust_step adjust the step position
+	 * @param bool       $adjust_step adjust the step position
 	 *
 	 * @return void
 	 * @throws \Exception
@@ -389,13 +467,13 @@ class Ring {
 			$ring_setting = 0;
 		}
 
-		$ring_setting = self::toIndex($ring_setting);
-		$ground_setting = self::toIndex($ground_setting);
+		$this->ring_setting = self::toIndex($ring_setting);
+		$this->ground_setting = self::toIndex($ground_setting);
 
 		$temp_ring = $this->ring;
 
 		// adjust the ring's position based on the ring and ground settings
-		$this->pos = self::normalize($ground_setting - $ring_setting);
+		$this->pos = self::normalize($this->ground_setting - $this->ring_setting);
 		$this->ring = (0 != $this->pos)
 			? substr($temp_ring, -(26 - $this->pos)) . substr($temp_ring, 0, $this->pos)
 			: $temp_ring;
@@ -406,12 +484,12 @@ class Ring {
 		if ($adjust_step && $this->has_rotatable_step) {
 			if (is_array($this->step_pos)) {
 				foreach ($this->step_pos as & $step_pos) { // mind the reference
-					$step_pos = self::normalize($step_pos - $ring_setting);
+					$step_pos = self::normalize($step_pos - $this->ring_setting);
 				}
 				unset($step_pos); // kill the reference
 			}
 			else {
-				$this->step_pos = self::normalize($this->step_pos - $ring_setting);
+				$this->step_pos = self::normalize($this->step_pos - $this->ring_setting);
 			}
 		}
 	}
@@ -434,6 +512,7 @@ class Ring {
 
 		// step the ring position (increase it by one, unless it's Z, then start over)
 		$this->pos = self::normalize($this->pos + 1);
+		$this->ground_setting = self::normalize($this->ground_setting + 1);
 	}
 
 
@@ -444,7 +523,7 @@ class Ring {
 	 */
 	public function isSteppingNext( ) {
 		if ($this->strict && ! $this->is_steppable) {
-			return;
+			return false;
 		}
 
 		if ( ! is_array($this->step_pos)) {
@@ -575,8 +654,8 @@ class Ring {
 	/**
 	 * Convert string character indexes to numeric indexes
 	 *
-	 * @param int|string|array $value index value
-	 * @param string $string optional string to index
+	 * @param int|string|array $value  index value
+	 * @param string           $string optional string to index
 	 *
 	 * @return int|array
 	 */
